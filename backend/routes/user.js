@@ -10,7 +10,7 @@ module.exports = function (app, db) {
             firstname: req.body.firstname,
             lastname: req.body.lastname,
             phone: req.body.phone,
-            group_id: 1
+            group_id: 2
         })
             .then(user => {
                 res.status(200).send(user)

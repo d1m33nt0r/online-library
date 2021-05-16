@@ -7,10 +7,6 @@ export class Cart extends Component{
     constructor(props) {
         super(props);
 
-        this.state = {
-            cartItems: []
-        }
-
         this.getCart = this.getCart.bind(this)
     }
 
@@ -19,18 +15,22 @@ export class Cart extends Component{
     }
 
     getCart() {
+
         Axios.get("http://localhost:3000/my-cart", {
             headers: {
                 user_id: this.props.user.id
             }
         })
             .then(res => {
+                console.log(false)
+                console.log(res.data)
                 this.props.setCartItems(res.data)
-                this.setState({cartItems: res.data})
             })
     }
 
     render() {
+        console.log(true)
+        console.log(this.props.cartItems)
         let emptyCart = <div className="container">
             <div className="row">
                 <div className="col" />

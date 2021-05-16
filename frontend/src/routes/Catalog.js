@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import Axios from "axios";
-import {RowPreview} from "./RowPreview";
+import {RowPreview} from "../components/Catalog/RowPreview";
 
 export class Catalog extends Component
 {
@@ -12,7 +12,6 @@ export class Catalog extends Component
 
         this.getBooks = this.getBooks.bind(this)
         this.parseBooks = this.parseBooks.bind(this)
-        this.refreshCart = this.refreshCart.bind(this)
     }
 
     componentDidMount() {
@@ -55,19 +54,18 @@ export class Catalog extends Component
         this.setState({books: parsedBooks})
     }
 
-    refreshCart(){
-        this.props.refreshCart();
-    }
-
     render() {
+
+        const catalog = <div className="container">
+            {
+                this.state.books.map((row, i) =>
+                    <RowPreview key={i++} row={row} user={this.props.user} />
+                )
+            }
+        </div>
+
         return(
-            <div className="container">
-                {
-                    this.state.books.map((row, i) =>
-                        <RowPreview key={i++} row={row} user={this.props.user} refreshCart={this.refreshCart}/>
-                    )
-                }
-            </div>
+            catalog
         )
     }
 }

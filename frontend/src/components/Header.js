@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import {PersonalBlock} from "./PersonalBlock";
+import PersonalBlockContainer from "../containers/components/PersonalBlockContainer";
+import {Link} from "react-router-dom";
 
 export class Header extends Component {
 
@@ -22,11 +23,12 @@ export class Header extends Component {
                     <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
                         <div className="navbar-nav">
                             <a className="nav-link active" aria-current="page" href="#">News</a>
-                            <a className="nav-link" href="#">Catalog</a>
+                            <Link className="nav-link" to="/catalog">Catalog</Link>
+                            <Link className="nav-link" to="/book">Book</Link>
                             <a className="nav-link" href="#">About us</a>
                         </div>
                     </div>
-                    <PersonalBlock onChangeToken={this.onChangeToken} user={this.props.user}/>
+                    <PersonalBlockContainer onChangeToken={this.onChangeToken} />
                 </div>
             </nav>
         );

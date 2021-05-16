@@ -22,6 +22,10 @@ require("./routes/user")(app, db)
 require("./routes/order")(app, db)
 require("./routes/book")(app, db)
 require("./routes/cart")(app, db)
+require("./routes/comment")(app, db)
+require("./routes/genre")(app, db)
+require("./routes/author")(app, db)
+require("./routes/publisher")(app, db)
 
 app.listen(httpPort, () => {
     console.log('server listen port', httpPort)

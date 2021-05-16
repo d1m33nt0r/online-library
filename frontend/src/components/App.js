@@ -1,47 +1,47 @@
-import React, { Component } from "react";
+import React, {useEffect, useState} from "react";
 import {Header} from "./Header";
 import '../styles/App.css';
 import Cookies from 'js-cookie';
 import Axios from "axios";
-import {Catalog} from "./Catalog";
+import {Catalog} from "../routes/Catalog";
 import {createStore, applyMiddleware} from "redux";
 import {Provider} from "react-redux";
 import rootReducer from '../store/reducers';
 import {logger} from "redux-logger";
 import thunk from "redux-thunk";
+import {setUser} from "../store/user/actions";
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route
+} from "react-router-dom";
+import BookContainer from "../containers/routes/BookContainer";
+import {AdminPanel} from "../routes/AdminPanel";
+import {AddBook} from "../routes/AddBook";
+import {AddAuthor} from "../routes/AddAuthor";
+import {AddGenre} from "../routes/AddGenre";
 
-const store = createStore(rootReducer, applyMiddleware(logger, thunk))
 
-class App extends Component {
+const App = () => {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            user: null,
-            updater: 1
-        }
+    const store = createStore(rootReducer, applyMiddleware(logger, thunk))
 
-        this.onChangeToken = this.onChangeToken.bind(this)
-        this.identification = this.identification.bind(this)
-        this.refreshCart = this.refreshCart.bind(this)
-    }
-
-    componentDidMount() {
+    useEffect(() => {
         let token = Cookies.get('token')
         if (token !== null)
-            this.identification(token)
-    }
+            identification(token)
+    })
 
-    onChangeToken(token) {
+    const onChangeToken = (token) => {
         if (token !== null)
             Cookies.set('token', token)
         else
             Cookies.remove('token')
 
-        this.identification(token)
+        identification(token)
     }
 
-    identification(token) {
+    const identification = (token) => {
         if(token !== null)
         {
             Axios.get('http://localhost:3000/identification', {
@@ -49,31 +49,49 @@ class App extends Component {
                     token: token
                 }
             }).then(res => {
-                this.setState({user: res.data})
+                store.dispatch(setUser(res.data))
             }).catch(err => {
-                this.setState({user: null})
+                store.dispatch(setUser(null))
             })
         }
         else
         {
-            this.setState({user: null})
+            store.dispatch(setUser(null))
         }
     }
 
-    refreshCart() {
-        this.setState({updater: this.state.updater + 1})
-    }
+    return (
+        <Provider store={store}>
+            <Router>
+            <div className="container">
+                <Header onChangeToken={onChangeToken} user={store.getState().userReducer.user}/>
 
-    render() {
-        return (
-            <Provider store={store}>
-                <div className="container">
-                    <Header onChangeToken={this.onChangeToken} user={this.state.user}/>
-                    <Catalog user={this.state.user} refreshCart={this.refreshCart}/>
-                </div>
-            </Provider>
-        );
-    }
+            </div>
+
+                <Switch>
+                    <Route path="/book">
+                        <BookContainer />
+                    </Route>
+                    <Route path="/catalog">
+                        <Catalog user={store.getState().userReducer.user} />
+                    </Route>
+                    <Route path="/add-book">
+                        <AddBook />
+                    </Route>
+                    <Route path="/add-author">
+                        <AddAuthor />
+                    </Route>
+                    <Route path="/add-genre">
+                        <AddGenre />
+                    </Route>
+                    <Route path="/admin">
+                        <AdminPanel />
+                    </Route>
+                </Switch>
+
+            </Router>
+        </Provider>
+    );
 }
 
 export default App;

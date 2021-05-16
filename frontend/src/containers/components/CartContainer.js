@@ -1,7 +1,7 @@
 import React, {Component} from "react";
-import {Cart} from "../components/Cart/Cart";
+import {Cart} from "../../components/Cart/Cart";
 import {connect} from "react-redux";
-import {setCartItems} from "../store/cart/actions";
+import {setCartItems} from "../../store/cart/actions";
 
 class CartContainer extends Component{
 
@@ -16,7 +16,8 @@ class CartContainer extends Component{
 
 const mapStateToProps = state => {
     return {
-        cartItems: state.cartReducer.cartItems
+        cartItems: state.cartReducer.cartItems,
+        user: state.userReducer.user
     }
 }
 
